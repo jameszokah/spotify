@@ -1,13 +1,18 @@
 
 import { BuiltInProviderType } from 'next-auth/providers';
 import {ClientSafeProvider, getProviders, LiteralUnion, signIn} from 'next-auth/react'
+import { FC } from 'react'; 
 
-const Login = ({providers}: {providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>}) => {
+export interface LoginProps {
+    providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
+}
+
+const Login: FC<LoginProps> = ({providers}) => {
   return <div className="flex flex-col items-center justify-center min-h-screen w-screen bg-black">
       <img src='/Spotify-Logo.svg' alt='spitify logo' className='w-[25rem]' />
 
       {
-          Object.values(providers) .map(provider => {
+          Object.values(providers).map(provider => {
               return (
                   <div 
                   key={provider.id}

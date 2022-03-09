@@ -8,7 +8,7 @@ export interface playlistData {
     name: string,
     folowers: object,
     id: string,
-    tracks: object,
+    tracks: {items: []},
     description: string,
     href: string,
     
@@ -27,7 +27,7 @@ export const playlistState = atom<playlistData['playlist']>({
     name: "",
     folowers: {},
     id: "",
-    tracks: {},
+    tracks: {items: []},
     description: "",
     href: "",},
 })

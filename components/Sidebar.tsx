@@ -33,34 +33,32 @@ const Sidebar = () => {
 
       getPlayList()
     }, [session,spotifyApi])
-  return <div className='text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 h-screen sm:max-w-[12rem] lg:max-w-[15rem] hidden md:inline-flex overflow-y-scroll scrollbar-hide'>
+  return <div className='text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-900 h-screen md:min-w-[11rem] lg:min-w-[12.5rem] hidden md:inline-flex overflow-y-scroll scrollbar-hide'>
       <div className='space-y-4'>
-        <button className='flex flex-row items-center hover:text-white space-x-2' onClick={() => signOut()}>
-          <p>LOGOUT</p>
-        </button>
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <HomeIcon className="w-5 h-5" />
           <p>Home</p>
         </button>
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <SearchIcon className="w-5 h-5" />
           <p>Search</p>
         </button>
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <LibraryIcon className="w-5 h-5" />
           <p>Your Library</p>
         </button>
         <hr className='border-t-[0.1px] border-gray-900' />
      
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <PlusCircleIcon className="w-5 h-5" />
           <p>Create Playlist</p>
         </button>
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <HeartIcon className="w-5 h-5" />
           <p>Liked Songs</p>
         </button>
-        <button className='flex flex-row items-center hover:text-white space-x-2'>
+        <button className='flex flex-row items-center hover:text-white space-x-3'>
           <RssIcon className="w-5 h-5" />
           <p>Your Episodes</p>
         </button>
