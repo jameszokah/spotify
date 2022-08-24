@@ -15,10 +15,10 @@ export const middleware = async (req: nextRequest) => {
         return NextResponse.next()
     }
 
-    // else if(!token) {
-     // pathname = "/login"
-    //     return NextResponse.redirect(origin + '/login',307);
-    // }
+    else if(!token) {
+     pathname = "/login"
+        return NextResponse.redirect(origin + '/login',307);
+    }
 
     else if(token && pathname.includes('/')) {
         return NextResponse.next()
