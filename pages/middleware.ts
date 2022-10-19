@@ -1,12 +1,8 @@
 import {getToken} from 'next-auth/jwt'
 import {NextResponse} from "next/server"
 import type {NextRequest} from "next/server"
-import { NextApiRequest } from 'next'
 
-type nextRequest = NextApiRequest & NextRequest 
-
-
-export const middleware = async (req: nextRequest) => {
+export const middleware = async (req: NextRequest) => {
     const token = await getToken({ req,secret: process.env.JWT_SECRET ?? "",  secureCookie: process.env.NODE_ENV === "production"});
     let url = req.nextUrl.clone();
     let {pathname, origin} = url;
