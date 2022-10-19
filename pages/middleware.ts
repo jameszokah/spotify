@@ -15,14 +15,24 @@ export const middleware = async (req: nextRequest) => {
         return NextResponse.next()
     }
 
-    else if(!token) {
-     pathname = "/login"
-        return NextResponse.redirect(origin + '/login',307);
+    
+
+    if (req.nextUrl.pathname.startsWith('/')) {
+        if(!token) {
+            pathname = "/login"
+               return NextResponse.rewrite(origin + '/login');
+           }
     }
 
-    else if(token && pathname.includes('/')) {
+     if(token && pathname.includes('/')) {
         return NextResponse.next()
     }
     console.log("meddle ware running",pathname)
      return NextResponse.next()
 }
+
+// Supports both a single string value or an array of matchers
+export const config = {
+    matcher: ['/', '/login', '/api/auth'],
+
+  }
