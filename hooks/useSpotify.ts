@@ -12,14 +12,14 @@ const useSpotify = () => {
             signIn();
             console.log('unauthenticated')
         }
-        else if(session == null) {
+        else if(!session) {
             signIn();
       }
 
         // spotifyApi.setAccessToken(typeof session?.accessToken === 'string' ? session?.accessToken : "")
         // spotifyApi.setRefreshToken(typeof session?.refreshToken === "string" ? session?.refreshToken : "")
 
-    //    spotifyApi.refreshAccessToken().then(console.log);
+       spotifyApi.refreshAccessToken().then(console.log);
     }, [session])
 
     return {spotifyApi}

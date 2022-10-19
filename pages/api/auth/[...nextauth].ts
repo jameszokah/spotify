@@ -1,4 +1,4 @@
-import NextAuth, { Account, Awaitable } from 'next-auth';
+import NextAuth, { Account } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import SpotifyProvider from 'next-auth/providers/spotify';
 import spotifyApi, { LOGIN_URL } from '../../../lib/spotify';
@@ -26,7 +26,6 @@ const refreshAccessToken = async (token: JWT,account: Account | null | undefined
         
        return {
            ...token,
-           error: "RefreshAccessTokenError",
        }
    }
    
@@ -57,7 +56,6 @@ export default NextAuth({
                     refreshToken: account.refresh_token,
                     username: account.providerAccountId,
                     accessTokenExpires: Date.now() + (account.expires_at ?? 1) * 1000,
-                    error: "RefreshAccessTokenError",
                     
                 }
             }
@@ -65,8 +63,8 @@ export default NextAuth({
                 console.log("ACCESS TOKEN STILL HASN'T EXPIRE YET")
                  return {
                     ...token,
-                    ...account,
-                    error: "RefreshAccessTokenError",
+                    ...account
+                    // error: "RefreshAccessTokenError",
 
                  };
         
@@ -87,8 +85,7 @@ export default NextAuth({
               ...user,
           },
           accessToken: token.accessToken,
-          refreshToken: token.refreshToken,
-          error: "RefreshAccessTokenError",
+          refreshToken: token.refreshToken
       }
         },
     },
