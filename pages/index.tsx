@@ -22,7 +22,7 @@ const Home: NextPage<HomeProps> = ({providers}) => {
 
   
     useEffect(() => {
-        if(session != null) {
+        if(session == null) {
           console.log('unauthenticated',status)
           router.push('/login')
           }

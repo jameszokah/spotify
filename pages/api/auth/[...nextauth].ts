@@ -1,20 +1,21 @@
-import NextAuth, { Awaitable } from 'next-auth';
+import NextAuth, { Account, Awaitable } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import SpotifyProvider from 'next-auth/providers/spotify';
 import spotifyApi, { LOGIN_URL } from '../../../lib/spotify';
 
 
 
-const refreshAccessToken = async (token: JWT) : Promise<JWT> => {
+const refreshAccessToken = async (token: JWT,account: Account | null | undefined) : Promise<JWT> => {
    try {
-       spotifyApi.setAccessToken(typeof token.accessToken === 'string' ? token.accessToken : "")
-       spotifyApi.setRefreshToken(typeof token.refreshToken === 'string' ? token.refreshToken : "")
+       spotifyApi.setAccessToken(account?.access_token ?? "");
+       spotifyApi.setRefreshToken(account?.refresh_token ?? "");
 
-       const { body: refreshToken } = await spotifyApi.refreshAccessToken();
+       const { body: refreshToken} = await spotifyApi.refreshAccessToken();
        console.log("REFRESHED ACCES TOKEN", refreshToken)
 
        return {
            ...token,
+           ...account,
            accessToken: refreshToken.access_token,
            refreshTokenExpires: Date.now() + refreshToken.expires_in * 1000, // = 1hr as 3600 returned from spotify api 
            refreshToken: refreshToken.access_token ?? (typeof token.refreshToken === "string" ? token.refreshToken : ""),
@@ -51,35 +52,43 @@ export default NextAuth({
             if(account && user) {
                 return {
                     ...token,
+                    ...account,
                     accessToken: account.access_token,
                     refreshToken: account.refresh_token,
                     username: account.providerAccountId,
-                    accessTokenExpires: (account.expires_at ?? 1) * 1000,
+                    accessTokenExpires: Date.now() + (account.expires_at ?? 1) * 1000,
+                    error: "RefreshAccessTokenError",
                     
                 }
             }
-            if((typeof token?.accessTokenExpires === "number") && (Date.now() <  token?.accessTokenExpires)) {
+            if((typeof account?.expires_at === "number") && (Date.now() <  (Date.now() + (account.expires_at ?? 1) * 1000))) {
                 console.log("ACCESS TOKEN STILL HASN'T EXPIRE YET")
-                 return token;
+                 return {
+                    ...token,
+                    ...account,
+                    error: "RefreshAccessTokenError",
+
+                 };
         
             }
 
       // Access token has expired, try to update it
         console.log("ACCES TOKEN HAS EXPIRED, REFRESHING")
-      return await refreshAccessToken(token)
+      return await refreshAccessToken(token,account)
         },
-        async session({session, token}) {
+        async session({session, token, user}) {
 
 
 
       return {
           ...session,
-          error: token.error,
           user: {
               ...session.user,
+              ...user,
           },
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
+          error: "RefreshAccessTokenError",
       }
         },
     },
