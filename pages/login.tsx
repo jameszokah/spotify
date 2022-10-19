@@ -32,7 +32,7 @@ export default Login;
 export const getServerSideProps = async () => {
 
     const providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null = await getProviders();
-    console.log(providers)
+    
     return {
         props: {
             providers

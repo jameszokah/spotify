@@ -3,29 +3,31 @@ import {FC, useEffect} from 'react'
 import Sidebar from '../components/Sidebar'
 import Center from '../components/center'
 import {useRouter} from 'next/router'
-import { ClientSafeProvider, getProviders, getSession, LiteralUnion} from 'next-auth/react'
+import { ClientSafeProvider, getProviders, getSession, LiteralUnion, useSession} from 'next-auth/react'
 import spotifyApi from '../lib/spotify'
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import { Session } from 'next-auth'
 import Login, { LoginProps } from './login'
 import { BuiltInProviderType } from 'next-auth/providers'
 
 
 interface HomeProps {
-  sessionData:  Session;
   providers: LoginProps['providers']
 }
  
 
-const Home: FC<HomeProps> = ({sessionData,providers}) => {
+const Home: NextPage<HomeProps> = ({providers}) => {
+    const {data: session,status} = useSession()
        const router = useRouter()
-    const session = sessionData?.data;
-    const status = sessionData?.status;
-  console.log(sessionData)
+
+  
     useEffect(() => {
-        if(status === 'unauthenticated') {
+        if(session != null) {
           console.log('unauthenticated',status)
           router.push('/login')
+          }
+          else {
+            router.replace('/')
           }
         }, [session])
 
@@ -52,16 +54,15 @@ const Home: FC<HomeProps> = ({sessionData,providers}) => {
 export default Home;
 
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const sessionData = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async () => {
+  
   const providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider> | null = await getProviders();
 
-  console.log(sessionData)
+
 
   return {
     props: {
-      sessionData,
-      providers,
+      providers
     }
   }
 }
